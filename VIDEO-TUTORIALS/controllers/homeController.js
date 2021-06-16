@@ -1,14 +1,16 @@
 
-const router = require('express').Router();
 
+class HomeController {
 
-router.get('/', (req, res) => {
-    res.render('home/user-home');
-});
+    constructor() { 
+    } 
 
-module.exports = router;
+    homePage(req, res) {
+        res.render('home/user-home');
+    };
+}
 
-
+module.exports = {HomeController};
 
 
 

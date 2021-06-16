@@ -1,32 +1,38 @@
-const router = require('express').Router();
-const authService = require('../services/authService'); 
-const registerValidation = require('../midlewares/joiValidator'); 
 
-router.get('/register', (req, res) => {
-    res.render('auth/register');
-});
 
-router.post('/register', async (req, res, next) => {
+class AuthController {
 
-    const validationError = registerValidation(req);
-    console.log(validationError);
-
-    const {username, password, repeatPassword} = req.body;
-
-    try {
-        const savedUser = await authService.register(username, password);
-        res.redirect('/');
-    } catch (e) {
-        next(e)
+    constructor(authService) {
+        this._authService = authService;
     }
-});
 
-router.get('/login', (req, res) => {
-    res.render('auth/login');
-});
+    register(req, res, next) {
+        res.render('auth/register');
+    };
 
-router.post('/login', (req, res) => {
-    res.redirect('/');
-});
+    registerConfirm(req, res, next) { 
+        // const validationError = registerValidation(req);
+        // console.log(validationError);
 
-module.exports = router;
+        const {username, password, repeatPassword} = req.body;
+
+        try {
+            const savedUser = this._authService.register(username, password);
+            res.redirect('/');
+        } catch (e) {
+            next(e)
+        }
+    };
+
+    login(req, res, next) {
+        res.render('auth/login');
+    };
+
+    loginConfirm(req, res, next) {
+        res.redirect('/');
+    };
+
+}
+
+
+module.exports = {AuthController};
