@@ -5,7 +5,7 @@ class HomeController {
     constructor() { 
     } 
 
-    homePage(req, res) {
+    async homePage(req, res) { 
         res.render('home/user-home');
     };
 }

@@ -27,6 +27,8 @@ class IndexRouter {
         this._router.get('/auth/login', (req, res, next) => this.authController.login(req, res, next));
 
         this._router.post('/auth/login', (req, res, next) => this.authController.loginConfirm(req, res, next));
+
+        this._router.get('/auth/logout', (req, res, next) => this.authController.logout(req, res, next));
     }
 }
 
