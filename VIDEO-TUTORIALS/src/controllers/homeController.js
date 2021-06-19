@@ -2,7 +2,8 @@
 
 class HomeController {
 
-    constructor() {
+    constructor(joiValidator) {
+        this._joiValidator = joiValidator;
     }
 
     async homePage(req, res) {

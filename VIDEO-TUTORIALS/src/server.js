@@ -6,14 +6,14 @@ const path = require('path');
 const IndexRouter = require('./router');
 const HomeController = require('./controllers/homeController');
 const AuthController = require('./controllers/authController');
-const AuthService = require('./services/authService'); 
-const ValidationService = require('./services/validationService'); 
-const auth = require('./midlewares/auth'); 
+const AuthService = require('./services/authService');
+const ValidationService = require('./services/validationService');
+const JoiValidatior = require('./validators/joiValidator');
+const auth = require('./midlewares/auth');
 const errorHandler = require('./midlewares/errorHandler');
 
-/**
- * @SetupApp
- */
+
+/* Setup App */
 const app = express();
 require('./config/mongoose-config');
 app.set('views', path.join(__dirname, 'views'));
@@ -21,34 +21,26 @@ app.engine('hbs', hbs({extname: 'hbs'}));
 app.set('view engine', 'hbs');
 app.use('./public', express.static('public'));
 app.use(express.urlencoded({extended: true}));
-app.use(cookieParser()); 
+app.use(cookieParser());
 app.use(auth);
-
-/**
- * @PrepareService
- */ 
-const authService = new AuthService();
-const validationService = new ValidationService();
-/**
- * @PrepareControllers
- */
-const homeController = new HomeController();
-const authController = new AuthController(authService, validationService);
-
-/**
- * @SetupRouter
- */
-
-//TODO take out all the configuration for the router 
-const indexRouter = new IndexRouter(homeController, authController);
-app.use(indexRouter._router);
-
-/* Awlays after the router */
+app.use(new IndexRouter(...createIndexRouter()).router); 
 app.use(errorHandler);
 
-/**
- * @RunServer
- */
+/* Run Server */
 app.listen(PORT, () => console.log(`Server is running on port: ${PORT}...`));
+
+/* Generate IndexRouter constructor args */
+function createIndexRouter() {
+    /* Joi validator */
+    const joiValidator = new JoiValidatior();
+    /* Services */
+    const authService = new AuthService();
+    const validationService = new ValidationService();
+    /* Controllers  */
+    const homeController = new HomeController(joiValidator);
+    const authController = new AuthController(joiValidator, authService, validationService);
+    /* Return indexRouter constructor args */
+    return [homeController, authController];
+}
 
 

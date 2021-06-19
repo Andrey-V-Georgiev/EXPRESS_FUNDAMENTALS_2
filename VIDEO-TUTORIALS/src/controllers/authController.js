@@ -1,9 +1,10 @@
 const config = require('../config/config');
-const registerValidation = require('../validators/joiValidator');
+
 
 class AuthController {
 
-    constructor(authService, validationService) {
+    constructor(joiValidator, authService, validationService) {
+        this._joiValidator = joiValidator;
         this._authService = authService;
         this._validationService = validationService;
     }
@@ -12,16 +13,17 @@ class AuthController {
         res.render('auth/register');
     };
 
-    async registerConfirm(req, res, next) {
-        const validationResult = registerValidation(req);
+    async registerConfirm(req, res, next) { 
+
+        const validationResult = this._joiValidator.registerValidation(req); 
         const error = await this._validationService.generateErrorString(validationResult); 
         if (error) { 
             return res.render('auth/register', {error});
         } 
         const {username, password} = req.body;
         try {
-            const savedUser = this._authService.register(username, password);
-            res.redirect('/');
+            await this._authService.register(username, password);
+            res.redirect('/auth/login');
         } catch (e) {
             next(e)
         }
@@ -32,8 +34,12 @@ class AuthController {
     };
 
     async loginConfirm(req, res, next) {
-        const username = req.body.username;
-        const password = req.body.password;
+        const validationResult = this._joiValidator.loginValidation(req);
+        const error = await this._validationService.generateErrorString(validationResult); 
+        if (error) { 
+            return res.render('auth/login', {error});
+        } 
+        const {username, password} = req.body ; 
         try {
             const token = await this._authService.login(username, password);
             res.cookie(config.COOKIE_NAME, token);
