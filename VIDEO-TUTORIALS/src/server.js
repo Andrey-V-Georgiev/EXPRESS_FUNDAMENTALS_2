@@ -6,10 +6,13 @@ const path = require('path');
 const IndexRouter = require('./router');
 const HomeController = require('./controllers/homeController');
 const AuthController = require('./controllers/authController');
+const CourseController = require('./controllers/courseController');
 const AuthService = require('./services/authService');
-const ValidationService = require('./services/validationService');
+const UserService = require('./services/userService');
+const CourseService = require('./services/courseService');
 const JoiValidatior = require('./validators/joiValidator');
 const auth = require('./midlewares/auth');
+const isAuth = require('./midlewares/isAuth');
 const errorHandler = require('./midlewares/errorHandler');
 
 
@@ -22,25 +25,31 @@ app.set('view engine', 'hbs');
 app.use('./public', express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(auth);
-app.use(new IndexRouter(...createIndexRouter()).router); 
-app.use(errorHandler);
+app.use(auth); // before router
+app.use(new IndexRouter(...createIndexRouter()).router);
+app.use(isAuth); // after router
+app.use(errorHandler); // after router
 
 /* Run Server */
 app.listen(PORT, () => console.log(`Server is running on port: ${PORT}...`));
 
-/* Generate IndexRouter constructor args */
+
 function createIndexRouter() {
     /* Joi validator */
     const joiValidator = new JoiValidatior();
+
     /* Services */
-    const authService = new AuthService();
-    const validationService = new ValidationService();
+    const userService = new UserService();
+    const authService = new AuthService(userService);
+    const courseService = new CourseService();
+
     /* Controllers  */
-    const homeController = new HomeController(joiValidator);
-    const authController = new AuthController(joiValidator, authService, validationService);
+    const homeController = new HomeController(joiValidator, courseService);
+    const authController = new AuthController(joiValidator, authService, userService);
+    const courseController = new CourseController(joiValidator, courseService);
+
     /* Return indexRouter constructor args */
-    return [homeController, authController];
+    return [homeController, authController, courseController];
 }
 
 

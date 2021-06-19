@@ -5,7 +5,9 @@ const jwt = require('jsonwebtoken');
 
 class AuthService {
 
-    constructor() { }
+    constructor(userService) {
+        this._userService = userService;
+    }
 
     async register(username, password) {
         const hashedPassword = await this.hashPasword(password);
@@ -20,11 +22,14 @@ class AuthService {
     }
 
     async login(username, password) {
-        const user = await User.findOne({username: username});
-        const isValidPassword = await bcrypt.compare(password, user.password);
-
+        const user = await this._userService.findUserByUsername(
+            username
+        );
+        const isValidPassword = await bcrypt.compare(
+            password, user.password
+        );
         if (!isValidPassword) {
-            throw {message: 'Invalid password'};
+            return null;
         }
         const token = jwt.sign({_id: user._id, username: user.username}, config.SECRET);
         return token;
