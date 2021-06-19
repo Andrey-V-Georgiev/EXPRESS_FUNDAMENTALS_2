@@ -1,9 +1,11 @@
 const config = require('../config/config');
+const registerValidation = require('../validators/joiValidator');
 
 class AuthController {
 
-    constructor(authService) {
+    constructor(authService, validationService) {
         this._authService = authService;
+        this._validationService = validationService;
     }
 
     async register(req, res, next) {
@@ -11,16 +13,13 @@ class AuthController {
     };
 
     async registerConfirm(req, res, next) {
-        // const validationError = registerValidation(req);
-        // console.log(validationError);
-
-        const username = req.body.username;
-        const password = req.body.password;
-        const repeatPassword = req.body.repeatPassword;
+        const validationResult = registerValidation(req);
+        const error = await this._validationService.generateErrorString(validationResult); 
+        if (error) { 
+            return res.render('auth/register', {error});
+        } 
+        const {username, password} = req.body;
         try {
-            if (password != repeatPassword) { 
-                //todo
-            }
             const savedUser = this._authService.register(username, password);
             res.redirect('/');
         } catch (e) {
@@ -53,4 +52,4 @@ class AuthController {
 }
 
 
-module.exports = {AuthController};
+module.exports = AuthController;

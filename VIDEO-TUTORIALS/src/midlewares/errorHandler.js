@@ -2,13 +2,7 @@ function errorHandlerr (err, req, res, next) {
 
     console.log('HIT errorHandlerr')
 
-    if(err.message) {
-        console.log(err.message);
-    }
-
-    if(err.pesho) {
-        console.log(err.pesho);
-    }
+    console.log(err)
 
     // if (err.msg && err.status) {
     //     console.log(err.msg);

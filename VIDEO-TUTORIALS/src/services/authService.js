@@ -24,13 +24,11 @@ class AuthService {
         const isValidPassword = await bcrypt.compare(password, user.password);
 
         if (!isValidPassword) {
-            throw {message:'Invalid password'};
+            throw {message: 'Invalid password'};
         }
         const token = jwt.sign({_id: user._id, username: user.username}, config.SECRET);
         return token;
     }
 }
 
-module.exports = {
-    AuthService
-};
+module.exports = AuthService;

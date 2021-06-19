@@ -3,10 +3,11 @@ const {PORT} = require('./config/config');
 const hbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
 const path = require('path');
-const {IndexRouter} = require('./router');
-const {HomeController} = require('./controllers/homeController');
-const {AuthController} = require('./controllers/authController');
-const {AuthService} = require('./services/authService'); 
+const IndexRouter = require('./router');
+const HomeController = require('./controllers/homeController');
+const AuthController = require('./controllers/authController');
+const AuthService = require('./services/authService'); 
+const ValidationService = require('./services/validationService'); 
 const auth = require('./midlewares/auth'); 
 const errorHandler = require('./midlewares/errorHandler');
 
@@ -27,12 +28,12 @@ app.use(auth);
  * @PrepareService
  */ 
 const authService = new AuthService();
-
+const validationService = new ValidationService();
 /**
  * @PrepareControllers
  */
 const homeController = new HomeController();
-const authController = new AuthController(authService);
+const authController = new AuthController(authService, validationService);
 
 /**
  * @SetupRouter
@@ -42,7 +43,7 @@ const authController = new AuthController(authService);
 const indexRouter = new IndexRouter(homeController, authController);
 app.use(indexRouter._router);
 
-
+/* Awlays after the router */
 app.use(errorHandler);
 
 /**

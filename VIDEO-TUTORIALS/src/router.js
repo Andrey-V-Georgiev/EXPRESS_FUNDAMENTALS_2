@@ -32,4 +32,4 @@ class IndexRouter {
     }
 }
 
-module.exports = {IndexRouter};
+module.exports = IndexRouter;
