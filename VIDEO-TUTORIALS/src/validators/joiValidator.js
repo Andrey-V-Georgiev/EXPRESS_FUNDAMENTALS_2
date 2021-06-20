@@ -114,5 +114,43 @@ class JoiValidatior {
         }); 
         return paramsIdSchema.validate(req).error;
     }
+
+    editCourseValidation(req) {
+        const paramsIdSchema = Joi.object().keys({
+            params: Joi.object().keys({
+                id: Joi.string()
+                .required()
+                .messages({
+                    'string.empty': `Id cannot be an empty field`,
+                    'any.required': `Id is a required field`
+                }) 
+            }),
+            body: Joi.object().keys({
+                title: Joi.string()
+                    .required()
+                    .messages({
+                        'string.empty': `Title cannot be an empty field`,
+                        'any.required': `Title is a required field`
+                    }),
+                description: Joi.string()
+                    .max(50)
+                    .required()
+                    .messages({
+                        'string.max': `Description should have a maximum length of {#limit}`,
+                        'string.empty': `Description cannot be an empty field`,
+                        'any.required': `Description is a required field`
+                    }),
+                imageUrl: Joi.string()
+                    .required()
+                    .messages({
+                        'string.empty': `Image URL cannot be an empty field`,
+                        'any.required': `Image URL is a required field`
+                    })
+            })
+        }).options({
+            abortEarly: false, allowUnknown: true
+        }); 
+        return paramsIdSchema.validate(req).error;
+    }
 }
 module.exports = JoiValidatior;

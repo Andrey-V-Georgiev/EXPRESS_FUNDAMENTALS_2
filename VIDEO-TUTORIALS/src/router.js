@@ -49,8 +49,11 @@ class IndexRouter {
         this._router.get('/course/edit/:id', isAuth,
             (req, res, next) => this._courseController.editCourse(req, res, next));
 
-        this._router.put('/course/edit/:id', isAuth,
+        this._router.post('/course/edit/:id', isAuth,
             (req, res, next) => this._courseController.editCourseConfirm(req, res, next));
+
+        this._router.get('/course/delete/:id', isAuth,
+            (req, res, next) => this._courseController.deleteCourseConfirm(req, res, next));
 
         this._router.get('/course/details/:id', isAuth,
             (req, res, next) => this._courseController.courseDetails(req, res, next));

@@ -6,21 +6,24 @@ class CourseService {
 
     constructor() { }
 
-    async findCourseById(courseId, userId) {
-        const course = await Course.findOne({_id: courseId}).populate('usersEnrolled').lean();
-        const isEnrolled = course.usersEnrolled.some(u => u._id == userId);
-        course.isEnrolled = isEnrolled; 
-        return course;
-    }
+    /* CREATE ------------------------------------------------------------------------------------------------- */
 
     async createCourse(courseData) {
         const course = await Course.create(courseData);
         return course;
     }
 
+    /* FIND --------------------------------------------------------------------------------------------------- */
+
+    async findCourseById(courseId, userId) {
+        const course = await Course.findOne({_id: courseId}).lean();
+        const isEnrolled = course.usersEnrolled.some(id => id == userId);
+        course.isEnrolled = isEnrolled;
+        return course;
+    }
+
     async findAll() {
         const courses = await Course.find({})
-            .populate('usersEnrolled')
             .sort({createdAt: 'desc'})
             .lean();
 
@@ -44,21 +47,30 @@ class CourseService {
         // });
     }
 
+    /* EDIT ------------------------------------------------------------------------------------------------- */
+
+    async editCourse(courseId, courseData) {
+        return Course.updateOne({_id: courseId}, courseData).lean(); 
+    }
+
     async enrollUser(courseId, userId) {
-       
+
         /* Patch the user */
         const user = await User.findById(userId);
         user.enrolledCourses.push(courseId);
         await user.save();
-      
+
         /* Patch the course */
         const course = await Course.findById(courseId);
         course.usersEnrolled.push(userId);
         return course.save();
     }
 
-    async isEnrolled(courseId, userId) {
-    
+    /* DELETE ------------------------------------------------------------------------------------------------- */
+
+    async deleteCourseConfirm(courseId) {
+        const course = await Course.deleteOne({_id: courseId});
+        return course;
     }
 }
 
