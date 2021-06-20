@@ -7,11 +7,12 @@ class HomeController {
         this._courseService = courseService;
     }
 
-    async homePage(req, res) {
+    async homePage(req, res, next) {
         const user = req.user;
+        const search = req.query.search; 
         if (user) {
             try {
-                const courses = await this._courseService.findAll();
+                const courses = await this._courseService.findAll(search);
                 res.render('home/user-home', {user, courses});
             } catch (e) {
                 next(e)

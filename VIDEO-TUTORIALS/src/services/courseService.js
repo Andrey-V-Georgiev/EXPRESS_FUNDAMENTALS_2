@@ -22,11 +22,13 @@ class CourseService {
         return course;
     }
 
-    async findAll() {
-        const courses = await Course.find({})
-            .sort({createdAt: 'desc'})
-            .lean();
-
+    async findAll(search) {
+        let courses;
+        if (search) {
+            courses = await Course.find({title: {$regex: search, $options: 'i'}}).sort({createdAt: 'desc'}).lean();
+        } else {
+            courses = await Course.find({}).sort({createdAt: 'desc'}).lean();
+        }
         const options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'};
         const locals = "en-US";
 

@@ -35,7 +35,7 @@ class JoiValidatior {
             })
         }).options({
             abortEarly: false, allowUnknown: true
-        }); 
+        });
         return registerSchema.validate(req).error;
     }
 
@@ -65,14 +65,14 @@ class JoiValidatior {
             })
         }).options({
             abortEarly: false, allowUnknown: true
-        }); 
+        });
         return loginSchema.validate(req).error;
     }
 
     createCourseValidation(req) {
         const createCourse = Joi.object().keys({
             body: Joi.object().keys({
-                title: Joi.string()
+                title: Joi.string() 
                     .required()
                     .messages({
                         'string.empty': `Title cannot be an empty field`,
@@ -95,7 +95,7 @@ class JoiValidatior {
             })
         }).options({
             abortEarly: false, allowUnknown: true
-        }); 
+        });
         return createCourse.validate(req).error;
     }
 
@@ -103,15 +103,15 @@ class JoiValidatior {
         const paramsIdSchema = Joi.object().keys({
             params: Joi.object().keys({
                 id: Joi.string()
-                .required()
-                .messages({
-                    'string.empty': `Id cannot be an empty field`,
-                    'any.required': `Id is a required field`
-                }) 
+                    .required()
+                    .messages({
+                        'string.empty': `Id cannot be an empty field`,
+                        'any.required': `Id is a required field`
+                    })
             })
         }).options({
             abortEarly: false, allowUnknown: true
-        }); 
+        });
         return paramsIdSchema.validate(req).error;
     }
 
@@ -119,11 +119,11 @@ class JoiValidatior {
         const paramsIdSchema = Joi.object().keys({
             params: Joi.object().keys({
                 id: Joi.string()
-                .required()
-                .messages({
-                    'string.empty': `Id cannot be an empty field`,
-                    'any.required': `Id is a required field`
-                }) 
+                    .required()
+                    .messages({
+                        'string.empty': `Id cannot be an empty field`,
+                        'any.required': `Id is a required field`
+                    })
             }),
             body: Joi.object().keys({
                 title: Joi.string()
@@ -149,7 +149,7 @@ class JoiValidatior {
             })
         }).options({
             abortEarly: false, allowUnknown: true
-        }); 
+        });
         return paramsIdSchema.validate(req).error;
     }
 }
