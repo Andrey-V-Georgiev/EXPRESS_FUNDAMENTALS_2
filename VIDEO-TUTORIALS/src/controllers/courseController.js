@@ -1,4 +1,4 @@
-const {generateErrorString} = require('../utils/validation-util');
+const {generateErrorJoi} = require('../utils/validation-util');
 
 
 class CourseController {
@@ -17,7 +17,7 @@ class CourseController {
     async createCourseConfirm(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.createCourseValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             return res.render('course/create-course', {error});
         }
@@ -42,7 +42,7 @@ class CourseController {
     async courseDetails(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.paramsIdValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) { 
             const courses = await this._courseService.findAll();
             res.render('home/user-home', {error, user, courses});
@@ -65,7 +65,7 @@ class CourseController {
     async editCourse(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.paramsIdValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             const courses = await this._courseService.findAll();
             res.render('home/user-home', {error, user, courses});
@@ -86,7 +86,7 @@ class CourseController {
     async editCourseConfirm(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.editCourseValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             const courses = await this._courseService.findAll();
             res.render('home/user-home', {error, user, courses});
@@ -109,18 +109,18 @@ class CourseController {
                 description: req.body.description.trim(),
                 imageUrl: req.body.imageUrl.trim(),
                 isPublic: Boolean(req.body.isPublic)
-            }
+            }  
             await this._courseService.editCourse(courseId, courseData);
             res.redirect('/');
         } catch (e) {
-            next();
+            next(e);
         }
     }
 
     async enrollUser(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.paramsIdValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             const courses = await this._courseService.findAll();
             res.render('home/user-home', {error, user, courses});
@@ -142,7 +142,7 @@ class CourseController {
     async deleteCourseConfirm(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.paramsIdValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             const courses = await this._courseService.findAll();
             res.render('home/user-home', {error, user, courses});
@@ -162,7 +162,7 @@ class CourseController {
             await this._courseService.deleteCourseConfirm(courseId);
             res.redirect('/');
         } catch (e) {
-            next();
+            next(e);
         }
     }
 }

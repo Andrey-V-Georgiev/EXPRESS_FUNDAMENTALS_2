@@ -37,20 +37,24 @@ class CourseService {
     }
 
     async findTopEnroled(limit) {
-        // const courses = await Course.find({}).sort({createdAt: 'desc'}).lean();
-        // const options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'};
-        // const locals = "en-US";
+        const courses = await Course.find({isPublic: true})
+            .sort({usersEnrolled: 'desc'})
+            .limit(limit)
+            .lean();
 
-        // return courses.map(c => {
-        //     c.createdAt = c.createdAt.toLocaleDateString(locals, options);
-        //     return c;
-        // });
+        const options = {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'};
+        const locals = "en-US";
+
+        return courses.map(c => {
+            c.createdAt = c.createdAt.toLocaleDateString(locals, options);
+            return c;
+        });
     }
 
     /* EDIT ------------------------------------------------------------------------------------------------- */
 
     async editCourse(courseId, courseData) {
-        return Course.updateOne({_id: courseId}, courseData).lean(); 
+        return Course.updateOne({_id: courseId}, courseData).lean();
     }
 
     async enrollUser(courseId, userId) {

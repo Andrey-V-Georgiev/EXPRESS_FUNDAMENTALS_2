@@ -9,7 +9,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    .min(3)
+                    .min(5)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be an empty field`,
@@ -17,7 +17,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    .min(3)
+                    .min(5)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({
@@ -44,7 +44,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    .min(3)
+                    .min(5)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be an empty field`,
@@ -52,7 +52,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    .min(3)
+                    .min(5)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({

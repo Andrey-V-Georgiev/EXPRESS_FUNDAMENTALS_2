@@ -9,12 +9,20 @@ class HomeController {
 
     async homePage(req, res) {
         const user = req.user;
-        if(user) {
-            const courses = await this._courseService.findAll();
-            res.render('home/user-home', {user, courses});
+        if (user) {
+            try {
+                const courses = await this._courseService.findAll();
+                res.render('home/user-home', {user, courses});
+            } catch (e) {
+                next(e)
+            }
         } else {
-            //const courses = await this._courseService.findTopEnroled(3);
-            res.render('home/guest-home');
+            try {
+                const courses = await this._courseService.findTopEnroled(3);
+                res.render('home/guest-home', {courses});
+            } catch (e) {
+                next(e)
+            }
         }
     };
 }

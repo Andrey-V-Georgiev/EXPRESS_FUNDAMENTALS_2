@@ -1,5 +1,5 @@
 const config = require('../config/config');
-const {generateErrorString} = require('../utils/validation-util');
+const {generateErrorJoi} = require('../utils/validation-util');
 
 
 class AuthController {
@@ -10,7 +10,7 @@ class AuthController {
         this._userService = userService;
     }
 
-    /* REGISTER */
+    /* REGISTER ------------------------------------------------------------------------------------------------ */
 
     async register(req, res, next) {
         res.render('auth/register');
@@ -19,12 +19,12 @@ class AuthController {
     async registerConfirm(req, res, next) {
         /* Validate input */
         const validationResult = this._joiValidator.registerValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             return res.render('auth/register', {error});
         }
         /* Input data */
-        const {username, password} = req.body;
+        const {username, password} = req.body; 
         try {
             /* Check if the name is available */
             const user = await this._userService.findUserByUsername(username);
@@ -42,7 +42,7 @@ class AuthController {
         }
     };
 
-    /* LOGIN */
+    /* LOGIN ------------------------------------------------------------------------------------------------ */
 
     async login(req, res, next) {
         res.render('auth/login');
@@ -50,7 +50,7 @@ class AuthController {
 
     async loginConfirm(req, res, next) {
         const validationResult = this._joiValidator.loginValidation(req);
-        const error = generateErrorString(validationResult);
+        const error = generateErrorJoi(validationResult);
         if (error) {
             return res.render('auth/login', {error});
         }
@@ -68,7 +68,7 @@ class AuthController {
         }
     };
 
-    /* LOGOUT */
+    /* LOGOUT ------------------------------------------------------------------------------------------------ */
 
     async logout(req, res, next) {
         res.clearCookie(config.COOKIE_NAME);
