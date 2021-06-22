@@ -11,7 +11,7 @@ class CourseController {
     /* CREATE -------------------------------------------------------------------------------------------------------*/
 
     async createCourse(req, res, next) {
-        res.render('course/create-course');
+        res.render('courses/create-course');
     }
 
     async createCourseConfirm(req, res, next) {
@@ -19,7 +19,7 @@ class CourseController {
         const validationResult = this._joiValidator.createCourseValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('course/create-course', {error});
+            return res.render('courses/create-course', {error});
         }
         const courseData = {
             title: req.body.title.trim(),
@@ -46,7 +46,7 @@ class CourseController {
         try {
             const course = await this._courseService.findCourseById(courseId, userId);
             course.isCreator = Boolean(course.creator == userId);
-            res.render('course/course-details', {course});
+            res.render('courses/course-details', {course});
         } catch (e) {
             next(e);
         }
@@ -61,7 +61,7 @@ class CourseController {
         try {
             const course = await this._courseService.findCourseById(courseId, userId);
             course.checked = course.isPublic ? 'checked' : '';
-            res.render('course/edit-course', {course});
+            res.render('courses/edit-course', {course});
         } catch (e) {
             next(e);
         }
@@ -82,7 +82,7 @@ class CourseController {
         try {
             const course = await this._courseService.findCourseById(courseId, userId);
             if (course.creator != userId) {
-                return res.render('course/course-details', {
+                return res.render('courses/course-details', {
                     course,
                     error: "Only the creator can edit the course"
                 });
@@ -122,7 +122,7 @@ class CourseController {
         try {
             const course = await this._courseService.findCourseById(courseId);
             if (course.creator != userId) {
-                return res.render('course/course-details', {
+                return res.render('courses/course-details', {
                     course,
                     error: "Only the creator can delete the course"
                 });

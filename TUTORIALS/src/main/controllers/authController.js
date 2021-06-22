@@ -13,7 +13,7 @@ class AuthController {
     /* REGISTER ------------------------------------------------------------------------------------------------ */
 
     async register(req, res, next) {
-        res.render('auth/register');
+        res.render('pages/user/register');
     };
 
     async registerConfirm(req, res, next) {
@@ -21,7 +21,7 @@ class AuthController {
         const validationResult = this._joiValidator.registerValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('auth/register', {error});
+            return res.render('pages/user/register', {error});
         }
         /* Input data */
         const {username, password} = req.body; 
@@ -29,7 +29,7 @@ class AuthController {
             /* Check if the name is available */
             const user = await this._userService.findUserByUsername(username);
             if (user) {
-                return res.render('auth/register', {error: "User with this username already exist"});
+                return res.render('pages/user/register', {error: "User with this username already exist"});
             }
             /* Register the user */
             await this._authService.register(
@@ -45,21 +45,21 @@ class AuthController {
     /* LOGIN ------------------------------------------------------------------------------------------------ */
 
     async login(req, res, next) {
-        res.render('auth/login');
+        res.render('pages/user/login');
     };
 
     async loginConfirm(req, res, next) {
         const validationResult = this._joiValidator.loginValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('auth/login', {error});
+            return res.render('pages/user/login', {error});
         }
         const {username, password} = req.body;
         try {
             /* Check if the name is available */ 
             const token = await this._authService.login(username, password);
             if (!token) {
-                return res.render('auth/login', {error: "Wrong username or password"});
+                return res.render('pages/user/login', {error: "Wrong username or password"});
             }
             res.cookie(config.COOKIE_NAME, token);
             res.redirect('/');

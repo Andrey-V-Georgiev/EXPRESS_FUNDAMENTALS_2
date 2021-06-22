@@ -29,7 +29,7 @@ class JoiValidatior {
                         'string.min': `Password should have a minimum length of {#limit}`,
                         'any.required': `Password is a required field`
                     }),
-                repeatPassword: Joi.any()
+                rePassword: Joi.any()
                     .equal(Joi.ref('password'))
                     .required()
                     .label('Repeat password')
@@ -101,7 +101,7 @@ class JoiValidatior {
             abortEarly: false, allowUnknown: true
         });
         return createCourse.validate(req).error;
-    } 
+    }
 
     editCourseValidation(req) {
         const paramsIdSchema = Joi.object().keys({

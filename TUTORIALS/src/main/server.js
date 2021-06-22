@@ -19,9 +19,9 @@ const errorHandler = require('./midlewares/errorHandler');
 /* Setup App */
 const app = express();
 require('./config/mongoose-config');
+app.set('views', path.join(__dirname, '../resources/views'));
 app.engine('hbs', hbs({extname: 'hbs'}));
 app.set('view engine', 'hbs');
-app.set('views', path.join(__dirname, '../resources/views'));
 app.use('../resources/public', express.static('public'));
 console.log(__dirname)
 app.use(express.urlencoded({extended: true}));

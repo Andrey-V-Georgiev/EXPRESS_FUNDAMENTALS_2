@@ -12,14 +12,15 @@ class HomeController {
         if (user) {
             try {
                 const courses = await this._courseService.findAll(search);
-                res.render('home/user-home', {user, courses});
+                res.render('pages/home/user-home', {user, courses});
+
             } catch (e) {
                 next(e)
             }
         } else {
             try {
                 const courses = await this._courseService.findTopEnroled(3);
-                res.render('home/guest-home', {courses});
+                res.render('pages/home/guest-home', {courses});
             } catch (e) {
                 next(e)
             }
