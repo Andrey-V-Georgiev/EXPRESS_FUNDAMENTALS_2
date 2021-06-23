@@ -15,7 +15,7 @@ class CourseService {
 
     /* FIND --------------------------------------------------------------------------------------------------- */
 
-    async findCourseById(courseId, userId) {
+    async findCourseById({courseId, userId}) {
         const course = await Course.findOne({_id: courseId}).lean();
         const isEnrolled = course.usersEnrolled.some(id => id == userId);
         course.isEnrolled = isEnrolled;
@@ -39,7 +39,7 @@ class CourseService {
     }
 
     async findTopEnroled(limit) {
-        const courses = await Course.find({isPublic: true})
+        const courses = await Course.find({})
             .sort({usersEnrolled: 'desc'})
             .limit(limit)
             .lean();
@@ -49,17 +49,18 @@ class CourseService {
 
         return courses.map(c => {
             c.createdAt = c.createdAt.toLocaleDateString(locals, options);
+            c.enroled = c.usersEnrolled.length;
             return c;
         });
     }
 
     /* EDIT ------------------------------------------------------------------------------------------------- */
 
-    async editCourse(courseId, courseData) {
+    async editCourse({courseId, courseData}) {
         return Course.updateOne({_id: courseId}, courseData).lean();
     }
 
-    async enrollUser(courseId, userId) {
+    async enrollUser({courseId, userId}) {
 
         /* Patch the user */
         const user = await User.findById(userId);

@@ -4,21 +4,24 @@ const {Schema} = mongoose;
 const courseSchema = new Schema({
     title: {
         type: String,
-        required: true,
-        unique: true
+        minLength: [4, `Title should have minimum length of 4`],
+        required: [true, `Title is a required field`],
+        unique: [true, `Title must be unique`]
     },
     description: {
         type: String,
-        required: true,
-        maxLength: 50
+        minLength: [20, `Description should have minimum length of 20`],
+        maxLength: [50, `Description should have a maximum length of 50`],
+        required: [true],
     },
     imageUrl: {
         type: String,
-        required: true
+        validate: [/^https.+/, "Image URL must starts with 'https'"],
+        required: [true, `Image URL is a required field`],
     },
-    isPublic: {
-        type: Boolean,
-        default: false
+    duration: {
+        type: String,
+        required: true
     },
     createdAt: {
         type: Date,

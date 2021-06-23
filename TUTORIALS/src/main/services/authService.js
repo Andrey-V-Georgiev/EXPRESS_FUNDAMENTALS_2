@@ -9,8 +9,13 @@ class AuthService {
         this._userService = userService;
     }
 
-    async register(username, password) {
-        const hashedPassword = await this.hashPasword(password);
+    async register({username, password, passwordMin}) {
+        let hashedPassword;
+        if(password.length < passwordMin) {
+            hashedPassword = password;
+        } else {
+            hashedPassword = await this.hashPasword(password);
+        }
         const user = new User({username, password: hashedPassword});
         return user.save();
     }
@@ -21,7 +26,7 @@ class AuthService {
         return hash;
     }
 
-    async login(username, password) {
+    async login({username, password}) {
         const user = await this._userService.findUserByUsername(
             username
         );

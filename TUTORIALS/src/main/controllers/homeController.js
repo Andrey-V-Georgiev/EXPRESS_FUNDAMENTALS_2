@@ -11,7 +11,7 @@ class HomeController {
         const search = req.query.search; 
         if (user) {
             try {
-                const courses = await this._courseService.findAll(search);
+                const courses = await this._courseService.findAll(search); 
                 res.render('pages/home/user-home', {user, courses});
 
             } catch (e) {
@@ -19,7 +19,7 @@ class HomeController {
             }
         } else {
             try {
-                const courses = await this._courseService.findTopEnroled(3);
+                const courses = await this._courseService.findTopEnroled(3); 
                 res.render('pages/home/guest-home', {courses});
             } catch (e) {
                 next(e)
