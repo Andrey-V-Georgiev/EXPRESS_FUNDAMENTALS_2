@@ -18,7 +18,7 @@ class AuthController {
 
     async registerConfirm(req, res, next) {
         /* Input data */
-        const {username, password} = req.body;
+        const {username, password} = req.body; 
         /* Validate input */
         const validationResult = this._joiValidator.registerValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
@@ -34,7 +34,7 @@ class AuthController {
             }
             /* Register the user */
             await this._authService.register(
-                {username, password, passwordMin: 5}
+                {username, password}
             );
             res.redirect('/auth/login');
         } catch (e) {

@@ -6,10 +6,10 @@ const path = require('path');
 const IndexRouter = require('./router');
 const HomeController = require('./controllers/homeController');
 const AuthController = require('./controllers/authController');
-const TheaterController = require('./controllers/theaterController');
+const PlayController = require('./controllers/playController');
 const AuthService = require('./services/authService');
 const UserService = require('./services/userService');
-const TheaterService = require('./services/theaterService');
+const PlayService = require('./services/playService');
 const JoiValidatior = require('./validators/joiValidator');
 const auth = require('./midlewares/auth');
 const isAuth = require('./midlewares/isAuth');
@@ -44,15 +44,15 @@ function createIndexRouter() {
     /* Services */
     const userService = new UserService();
     const authService = new AuthService(userService);
-    const theaterService = new TheaterService();
+    const playService = new PlayService();
 
     /* Controllers  */
-    const homeController = new HomeController(joiValidator, theaterService);
+    const homeController = new HomeController(joiValidator, playService);
     const authController = new AuthController(joiValidator, authService, userService);
-    const theaterController = new TheaterController(joiValidator, theaterService);
+    const playController = new PlayController(joiValidator, playService);
 
     /* Return indexRouter constructor args */
-    return [homeController, authController, theaterController];
+    return [homeController, authController, playController];
 }
 
 

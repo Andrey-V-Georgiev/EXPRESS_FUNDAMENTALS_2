@@ -2,7 +2,7 @@ const Play = require('../models/Play');
 const User = require('../models/User');
 
 
-class TheaterService {
+class PlayService {
 
     constructor() { }
 
@@ -60,7 +60,7 @@ class TheaterService {
         return Play.updateOne({_id: playId}, playData).lean();
     }
 
-    async likeTheater({playId, userId}) {
+    async likePlay({playId, userId}) {
 
         /* Patch the user */
         const user = await User.findById(userId);
@@ -81,4 +81,4 @@ class TheaterService {
     }
 }
 
-module.exports = TheaterService;
+module.exports = PlayService;

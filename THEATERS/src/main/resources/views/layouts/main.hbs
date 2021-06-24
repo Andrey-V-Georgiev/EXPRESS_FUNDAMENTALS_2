@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>Express Exam</title>
     <link href="../static/css/style.css" type="text/css" rel="stylesheet">
- 
 </head>
 
 <body>
@@ -14,18 +13,20 @@
         <a>Theater</a>
         <ul>
             <li><a href="/">Home </a></li>
-            <li><a href="#">Logout</a></li>
-            <li><a href="#">Login</a></li>
-            <li><a href="#">Register</a></li>
+
+            {{#if user}}
+            <li><a href="/auth/logout">Logout</a></li>
+            {{else}}
+            <li><a href="/auth/login">Login</a></li>
+            <li><a href="/auth/register">Register</a></li>
+            {{/if}}
         </ul>
     </nav>
 
     {{!-- ERROR ----------------------------------------------------------------------------------------------}}
     {{#if error}}
-    <section class="notifications">
-        <p class="notification-message">
-        <div class="alert alert-danger" role="alert"> {{error}} </div>
-        </p>
+    <section class="notifications error">
+        <p> {{error}} </p>
     </section>
     {{/if}}
 

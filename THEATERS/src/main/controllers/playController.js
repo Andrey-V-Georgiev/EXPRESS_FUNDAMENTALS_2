@@ -1,22 +1,22 @@
 const ValidationSerevice = require('../services/validationService');
 
 
-class TheaterController {
+class PlayController {
 
-    constructor(joiValidator, theaterService) {
+    constructor(joiValidator, playService) {
         this._joiValidator = joiValidator;
-        this._theaterService = theaterService;
+        this._playService = playService;
     }
 
     /* CREATE -------------------------------------------------------------------------------------------------------*/
 
-    async createTheater(req, res, next) {
+    async createPlay(req, res, next) {
         res.render('create-theater');
     }
 
-    async createTheaterConfirm(req, res, next) {
+    async createPlayConfirm(req, res, next) {
         /* Input data */
-        const theaterData = {
+        const playData = {
             title: req.body.title.trim(),
             description: req.body.description.trim(),
             imageUrl: req.body.imageUrl.trim(),
@@ -25,13 +25,13 @@ class TheaterController {
             creator: req.user._id
         }
         /* Validate input */
-        const validationResult = this._joiValidator.createTheaterValidation(req);
+        const validationResult = this._joiValidator.createPlayValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('create-theater', {error, theater: theaterData});
+            return res.render('create-theater', {error, play: playData});
         }
         try {
-            await this._theaterService.createTheater(theaterData);
+            await this._playService.createPlay(playData);
             res.redirect('/');
         } catch (e) {
             next(e);
@@ -40,14 +40,14 @@ class TheaterController {
 
     /* FIND -------------------------------------------------------------------------------------------------------*/
 
-    async theaterDetails(req, res, next) {
+    async playDetails(req, res, next) {
         /* Input data */
-        const theaterId = req.params.id;
+        const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const theater = await this._theaterService.findTheaterById({theaterId, userId});
-            theater.isCreator = Boolean(theater.creator == userId);
-            res.render('theater-details', {theater});
+            const play = await this._playService.findPlayById({playId, userId});
+            play.isCreator = Boolean(play.creator == userId);
+            res.render('theater-details', {play});
         } catch (e) {
             next(e);
         }
@@ -55,21 +55,21 @@ class TheaterController {
 
     /* EDIT -------------------------------------------------------------------------------------------------------*/
 
-    async editTheater(req, res, next) {
+    async editPlay(req, res, next) {
         /* Input data */
-        const theaterId = req.params.id;
+        const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const theater = await this._theaterService.findTheaterById({theaterId, userId});
-            res.render('edit-theater', {theater});
+            const play = await this._playService.findPlayById({playId, userId});
+            res.render('edit-theater', {play});
         } catch (e) {
             next(e);
         }
     }
 
-    async editTheaterConfirm(req, res, next) {
+    async editPlayConfirm(req, res, next) {
         /* Input data */
-        const theaterData = {
+        const playData = {
             _id: req.params.id,
             title: req.body.title.trim(),
             description: req.body.description.trim(),
@@ -77,38 +77,38 @@ class TheaterController {
             duration: req.body.duration
         }
         /* Validate input */
-        const validationResult = this._joiValidator.editTheaterValidation(req);
+        const validationResult = this._joiValidator.editPlayValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) { 
-            res.render('edit-theater', {error, theater: theaterData});
+            res.render('edit-theater', {error, play: playData});
             return;
         }
         /* Input data */
-        const theaterId = req.params.id;
+        const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const theater = await this._theaterService.findTheaterById({theaterId, userId});
-            if (theater.creator != userId) {
+            const play = await this._playService.findPlayById({playId, userId});
+            if (play.creator != userId) {
                 return res.render('theater-details', {
-                    theater,
-                    error: "Only the creator can edit the theater"
+                    play,
+                    error: "Only the creator can edit the play"
                 });
             }
 
-            await this._theaterService.editTheater({theaterId, theaterData});
+            await this._playService.editPlay({playId, playData});
             res.redirect('/');
         } catch (e) {
             next(e);
         }
     }
 
-    async likeTheater(req, res, next) {
+    async likePlay(req, res, next) {
         /* Input data */
-        const theaterId = req.params.id;
+        const playId = req.params.id;
         const userId = req.user._id;
         try {
-            await this._theaterService.likeTheater({theaterId, userId});
-            res.redirect(`/theater/details/${theaterId}`)
+            await this._playService.likePlay({playId, userId});
+            res.redirect(`/play/details/${playId}`)
         } catch (e) {
             next(e);
         }
@@ -116,19 +116,19 @@ class TheaterController {
 
     /* DELETE -------------------------------------------------------------------------------------------------------*/
 
-    async deleteTheaterConfirm(req, res, next) {
+    async deletePlayConfirm(req, res, next) {
         /* Input data */
-        const theaterId = req.params.id;
+        const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const theater = await this._theaterService.findTheaterById({theaterId});
-            if (theater.creator != userId) {
+            const play = await this._playService.findPlayById({playId});
+            if (play.creator != userId) {
                 return res.render('theater-details', {
-                    theater,
-                    error: "Only the creator can delete the theater"
+                    play,
+                    error: "Only the creator can delete the play"
                 });
             }
-            await this._theaterService.deleteTheaterConfirm(theaterId);
+            await this._playService.deletePlayConfirm(playId);
             res.redirect('/');
         } catch (e) {
             next(e);
@@ -136,4 +136,4 @@ class TheaterController {
     }
 }
 
-module.exports = TheaterController;
+module.exports = PlayController;

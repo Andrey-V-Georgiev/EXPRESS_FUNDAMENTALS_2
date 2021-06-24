@@ -9,7 +9,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    .min(5)
+                    // .min(5)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be empty field`,
@@ -17,7 +17,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    .min(5)
+                    //   .min(5)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({
@@ -27,7 +27,7 @@ class JoiValidatior {
                         'string.min': `Password should have a minimum length of {#limit}`,
                         'any.required': `Password is a required field`
                     }),
-                rePassword: Joi.any()
+                repeatPassword: Joi.any()
                     .equal(Joi.ref('password'))
                     .required()
                     .label('Repeat password')
@@ -44,7 +44,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    .min(5)
+                    //  .min(5)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be empty field`,
@@ -52,7 +52,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    .min(5)
+                    // .min(5)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({
@@ -73,7 +73,7 @@ class JoiValidatior {
         const createPlaySchema = Joi.object().keys({
             body: Joi.object().keys({
                 title: Joi.string()
-                    .min(4)
+                    //  .min(4)
                     .required()
                     .messages({
                         'string.min': `Title should have minimum length of {#limit}`,
@@ -81,7 +81,7 @@ class JoiValidatior {
                         'any.required': `Title is a required field`
                     }),
                 description: Joi.string()
-                    .min(20)
+                    //.min(20)
                     .max(50)
                     .required()
                     .messages({
@@ -115,7 +115,7 @@ class JoiValidatior {
         const editPlaySchema = Joi.object().keys({
             body: Joi.object().keys({
                 title: Joi.string()
-                    .min(4)
+                    //  .min(4)
                     .required()
                     .messages({
                         'string.min': `Title should have minimum length of {#limit}`,
@@ -123,7 +123,7 @@ class JoiValidatior {
                         'any.required': `Title is a required field`
                     }),
                 description: Joi.string()
-                    .min(20)
+                    //  .min(20)
                     .max(50)
                     .required()
                     .messages({
