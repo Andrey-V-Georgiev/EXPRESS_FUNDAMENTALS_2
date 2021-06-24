@@ -14,9 +14,9 @@ const userSchema = new Schema({
         minLength: [5, "Password must be at least 5 charachters long"],  
         required: [true, "Password field is required"],
     },
-    enrolledCourses: [{
+    likedPlays: [{
         type: Schema.Types.ObjectId,
-        ref: 'Course'
+        ref: 'Play'
     }]
 });
 

@@ -69,8 +69,8 @@ class JoiValidatior {
         return loginSchema.validate(req).error;
     }
 
-    createCourseValidation(req) {
-        const createCourse = Joi.object().keys({
+    createPlayValidation(req) {
+        const createPlaySchema = Joi.object().keys({
             body: Joi.object().keys({
                 title: Joi.string()
                     .min(4)
@@ -108,11 +108,11 @@ class JoiValidatior {
         }).options({
             abortEarly: false, allowUnknown: true
         });
-        return createCourse.validate(req).error;
+        return createPlaySchema.validate(req).error;
     }
 
-    editCourseValidation(req) {
-        const paramsIdSchema = Joi.object().keys({
+    editPlayValidation(req) {
+        const editPlaySchema = Joi.object().keys({
             body: Joi.object().keys({
                 title: Joi.string()
                     .min(4)
@@ -150,7 +150,7 @@ class JoiValidatior {
         }).options({
             abortEarly: false, allowUnknown: true
         });
-        return paramsIdSchema.validate(req).error;
+        return editPlaySchema.validate(req).error;
     }
 }
 module.exports = JoiValidatior;

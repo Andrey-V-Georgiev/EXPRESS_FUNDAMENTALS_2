@@ -3,10 +3,10 @@ const isAuth = require('./midlewares/isAuth');
 
 class IndexRouter {
 
-    constructor(homeController, authController, courseController) {
+    constructor(homeController, authController, theaterController) {
         this._homeController = homeController;
         this._authController = authController;
-        this._courseController = courseController;
+        this._theaterController = theaterController;
         this._router = Router();
         this._init();
     }
@@ -38,28 +38,28 @@ class IndexRouter {
         this._router.get('/auth/logout', isAuth,
             (req, res, next) => this._authController.logout(req, res, next));
 
-        /* COURSE CONTROLLER */
+        /* THEATER CONTROLLER */
 
-        this._router.get('/course/create', isAuth,
-            (req, res, next) => this._courseController.createCourse(req, res, next));
+        this._router.get('/theater/create', isAuth,
+            (req, res, next) => this._theaterController.createTheater(req, res, next));
 
-        this._router.post('/course/create', isAuth,
-            (req, res, next) => this._courseController.createCourseConfirm(req, res, next));
+        this._router.post('/theater/create', isAuth,
+            (req, res, next) => this._theaterController.createTheateryConfirm(req, res, next));
 
-        this._router.get('/course/edit/:id', isAuth,
-            (req, res, next) => this._courseController.editCourse(req, res, next));
+        this._router.get('/theater/edit/:id', isAuth,
+            (req, res, next) => this._theaterController.editTheater(req, res, next));
 
-        this._router.post('/course/edit/:id', isAuth,
-            (req, res, next) => this._courseController.editCourseConfirm(req, res, next));
+        this._router.post('/theater/edit/:id', isAuth,
+            (req, res, next) => this._theaterController.editTheaterConfirm(req, res, next));
 
-        this._router.get('/course/delete/:id', isAuth,
-            (req, res, next) => this._courseController.deleteCourseConfirm(req, res, next));
+        this._router.get('/theater/delete/:id', isAuth,
+            (req, res, next) => this._theaterController.deleteTheaterConfirm(req, res, next));
 
-        this._router.get('/course/details/:id', isAuth,
-            (req, res, next) => this._courseController.courseDetails(req, res, next));
+        this._router.get('/theater/details/:id', isAuth,
+            (req, res, next) => this._theaterController.theaterDetails(req, res, next));
 
-        this._router.get('/course/enroll/:id', isAuth,
-            (req, res, next) => this._courseController.enrollUser(req, res, next));
+        this._router.get('/theater/like/:id', isAuth,
+            (req, res, next) => this._theaterController.likeTheater(req, res, next));
     }
 }
 

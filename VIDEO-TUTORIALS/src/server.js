@@ -19,10 +19,13 @@ const errorHandler = require('./midlewares/errorHandler');
 /* Setup App */
 const app = express();
 require('./config/mongoose-config');
+
 app.set('views', path.join(__dirname, 'views'));
-app.engine('hbs', hbs({extname: 'hbs'}));
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 app.set('view engine', 'hbs');
-app.use('./public', express.static('public'));
+app.engine('hbs', hbs({extname: 'hbs'}));
+
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(auth); // before router

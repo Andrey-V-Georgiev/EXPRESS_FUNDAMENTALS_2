@@ -1,9 +1,9 @@
  
 class HomeController {
 
-    constructor(joiValidator, courseService) {
+    constructor(joiValidator, theaterService) {
         this._joiValidator = joiValidator;
-        this._courseService = courseService;
+        this._theaterService = theaterService;
     }
 
     async homePage(req, res, next) {
@@ -11,16 +11,16 @@ class HomeController {
         const search = req.query.search; 
         if (user) {
             try {
-                const courses = await this._courseService.findAll(search); 
-                res.render('pages/home/user-home', {user, courses});
+                const courses = await this._theaterService.findAll(search); 
+                res.render('user-home', {user, courses});
 
             } catch (e) {
                 next(e)
             }
         } else {
             try {
-                const courses = await this._courseService.findTopEnroled(3); 
-                res.render('pages/home/guest-home', {courses});
+                const courses = await this._theaterService.findTopLiked(3); 
+                res.render('guest-home', {courses});
             } catch (e) {
                 next(e)
             }

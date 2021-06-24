@@ -13,7 +13,7 @@ class AuthController {
     /* REGISTER ------------------------------------------------------------------------------------------------ */
 
     async register(req, res, next) {
-        res.render('pages/user/register');
+        res.render('register');
     };
 
     async registerConfirm(req, res, next) {
@@ -23,14 +23,14 @@ class AuthController {
         const validationResult = this._joiValidator.registerValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('pages/user/register', {error, username});
+            return res.render('register', {error, username});
         }
         /* Input data */
         try {
             /* Check if the name is available */
             const user = await this._userService.findUserByUsername(username);
             if (user) {
-                return res.render('pages/user/register', {error: "User with this username already exist"});
+                return res.render('register', {error: "User with this username already exist"});
             }
             /* Register the user */
             await this._authService.register(
@@ -45,7 +45,7 @@ class AuthController {
     /* LOGIN ------------------------------------------------------------------------------------------------ */
 
     async login(req, res, next) {
-        res.render('pages/user/login');
+        res.render('login');
     };
 
     async loginConfirm(req, res, next) {
@@ -55,13 +55,13 @@ class AuthController {
         const validationResult = this._joiValidator.loginValidation(req);
         const error = ValidationSerevice.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('pages/user/login', {error, username});
+            return res.render('login', {error, username});
         }
         try {
             /* Check if the name is available */
             const token = await this._authService.login({username, password});
             if (!token) {
-                return res.render('pages/user/login', {error: "Wrong username or password", username});
+                return res.render('login', {error: "Wrong username or password", username});
             }
             res.cookie(config.COOKIE_NAME, token);
             res.redirect('/');

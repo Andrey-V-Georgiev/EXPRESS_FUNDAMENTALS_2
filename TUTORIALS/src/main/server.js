@@ -14,16 +14,18 @@ const JoiValidatior = require('./validators/joiValidator');
 const auth = require('./midlewares/auth');
 const isAuth = require('./midlewares/isAuth');
 const errorHandler = require('./midlewares/errorHandler');
-
+ 
 
 /* Setup App */
 const app = express();
 require('./config/mongoose-config');
-app.set('views', path.join(__dirname, '../resources/views'));
+
 app.engine('hbs', hbs({extname: 'hbs'}));
 app.set('view engine', 'hbs');
-app.use('../resources/public', express.static('public'));
-console.log(__dirname)
+
+app.set('views', path.join(__dirname, 'resources/views'));
+app.use('/static', express.static(path.join(__dirname, 'resources/public')));
+
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(auth); // before router

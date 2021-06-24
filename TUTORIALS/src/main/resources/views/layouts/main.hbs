@@ -36,17 +36,11 @@
         </nav>
 
         {{!-- ERROR ----------------------------------------------------------------------------------------------}}
+        {{#if error}}
         <section class="notifications">
-            {{#if error}}
-            <p class="notification-message">
-            <div class="alert alert-danger" role="alert"> {{error}} </div>
-            </p>
-            {{else}}
-            <p class="notification-message"></p>
-            <div class="alert alert-light" role="alert"></div>
-            </p>
-            {{/if}}
+            <p class="notification-message"> {{error}} </p>
         </section>
+        {{/if}}
 
         {{!-- MAIN ---------------------------------------------------------------------------------------------------}}
         <main>

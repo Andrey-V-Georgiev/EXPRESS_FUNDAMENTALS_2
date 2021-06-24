@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const courseSchema = new Schema({
+const playSchema = new Schema({
     title: {
         type: String,
         minLength: [4, `Title should have minimum length of 4`],
@@ -19,15 +19,15 @@ const courseSchema = new Schema({
         validate: [/^https.+/, "Image URL must starts with 'https'"],
         required: [true, `Image URL is a required field`],
     },
-    duration: {
-        type: String,
+    isPublic: {
+        type: Boolean,
         required: true
     },
     createdAt: {
         type: Date,
         required: true
     },
-    usersEnrolled: [{
+    usersLiked: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
@@ -37,4 +37,4 @@ const courseSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Course', courseSchema);
+module.exports = mongoose.model('Play', playSchema);
