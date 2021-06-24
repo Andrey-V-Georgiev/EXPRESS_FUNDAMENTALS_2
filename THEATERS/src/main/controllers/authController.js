@@ -1,40 +1,41 @@
 const config = require('../config/config');
-const ValidationSerevice = require('../services/validationService');
+const ValidatorHandler = require('../validators/validatorHandler');
 
 
 class AuthController {
 
-    constructor(joiValidator, authService, userService) {
+    constructor(joiValidator, userService) {
         this._joiValidator = joiValidator;
-        this._authService = authService;
         this._userService = userService;
     }
 
     /* REGISTER ------------------------------------------------------------------------------------------------ */
 
     async register(req, res, next) {
-        res.render('register');
+        res.render('auth/register');
     };
 
     async registerConfirm(req, res, next) {
         /* Input data */
-        const {username, password} = req.body; 
+        const username = req.body.username;
+        const password = req.body.password;
+
         /* Validate input */
         const validationResult = this._joiValidator.registerValidation(req);
-        const error = ValidationSerevice.generateErrorJoi(validationResult);
+        const error = ValidatorHandler.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('register', {error, username});
+            return res.render('auth/register', {error, username});
         }
-        /* Input data */
         try {
             /* Check if the name is available */
             const user = await this._userService.findUserByUsername(username);
             if (user) {
-                return res.render('register', {error: "User with this username already exist"});
+                return res.render('auth/register', {error: "User with this username already exist"});
             }
             /* Register the user */
-            await this._authService.register(
-                {username, password}
+            await this._userService.register(
+                username,
+                password
             );
             res.redirect('/auth/login');
         } catch (e) {
@@ -45,23 +46,28 @@ class AuthController {
     /* LOGIN ------------------------------------------------------------------------------------------------ */
 
     async login(req, res, next) {
-        res.render('login');
+        res.render('auth/login');
     };
 
     async loginConfirm(req, res, next) {
         /* Input data */
-        const {username, password} = req.body;
+        const username = req.body.username;
+        const password = req.body.password;
+
         /* Validate input */
         const validationResult = this._joiValidator.loginValidation(req);
-        const error = ValidationSerevice.generateErrorJoi(validationResult);
+        const error = ValidatorHandler.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('login', {error, username});
+            return res.render('auth/login', {error, username});
         }
         try {
             /* Check if the name is available */
-            const token = await this._authService.login({username, password});
+            const token = await this._userService.login(
+                username,
+                password
+            );
             if (!token) {
-                return res.render('login', {error: "Wrong username or password", username});
+                return res.render('auth/login', {error: "Wrong username or password", username});
             }
             res.cookie(config.COOKIE_NAME, token);
             res.redirect('/');

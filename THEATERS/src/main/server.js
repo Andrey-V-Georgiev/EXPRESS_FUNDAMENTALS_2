@@ -1,16 +1,17 @@
 const express = require("express");
-const {PORT} = require('./config/config');
 const hbs = require('express-handlebars');
 const cookieParser = require('cookie-parser');
+const {PORT} = require('./config/config');
 const path = require('path');
-const IndexRouter = require('./router');
+
+const UserService = require('./services/userService');
+const PlayService = require('./services/playService');
 const HomeController = require('./controllers/homeController');
 const AuthController = require('./controllers/authController');
 const PlayController = require('./controllers/playController');
-const AuthService = require('./services/authService');
-const UserService = require('./services/userService');
-const PlayService = require('./services/playService');
 const JoiValidatior = require('./validators/joiValidator');
+const IndexRouter = require('./router');
+
 const auth = require('./midlewares/auth');
 const isAuth = require('./midlewares/isAuth');
 const errorHandler = require('./midlewares/errorHandler');
@@ -43,12 +44,11 @@ function createIndexRouter() {
 
     /* Services */
     const userService = new UserService();
-    const authService = new AuthService(userService);
     const playService = new PlayService();
 
     /* Controllers  */
     const homeController = new HomeController(joiValidator, playService);
-    const authController = new AuthController(joiValidator, authService, userService);
+    const authController = new AuthController(joiValidator, userService);
     const playController = new PlayController(joiValidator, playService);
 
     /* Return indexRouter constructor args */

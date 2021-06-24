@@ -16,51 +16,38 @@ class IndexRouter {
 
     _init() {
 
-        /* AUTH CONTROLLER */
+        /* AUTH --------------------------------------------------------------------------------------------------------------- */
 
-        this._router.get('/auth/register',
-            (req, res, next) => this._authController.register(req, res, next));
+        this._router.get('/auth/register',  (req, res, next) => this._authController.register(req, res, next));
 
-        this._router.post('/auth/register',
-            (req, res, next) => this._authController.registerConfirm(req, res, next));
+        this._router.post('/auth/register', (req, res, next) => this._authController.registerConfirm(req, res, next));
 
-        this._router.get('/auth/login',
-            (req, res, next) => this._authController.login(req, res, next));
+        this._router.get('/auth/login',  (req, res, next) => this._authController.login(req, res, next));
 
-        this._router.post('/auth/login',
-            (req, res, next) => this._authController.loginConfirm(req, res, next));
+        this._router.post('/auth/login', (req, res, next) => this._authController.loginConfirm(req, res, next));
 
-        this._router.get('/auth/logout', isAuth,
-            (req, res, next) => this._authController.logout(req, res, next));
+        this._router.get('/auth/logout', isAuth, (req, res, next) => this._authController.logout(req, res, next));
 
-        /* THEATER CONTROLLER */
+        /* PLAY --------------------------------------------------------------------------------------------------------------- */
 
-        this._router.get('/play/create', isAuth,
-            (req, res, next) => this._playController.createPlay(req, res, next));
+        this._router.get('/play/create', isAuth, (req, res, next) => this._playController.createPlay(req, res, next));
 
-        this._router.post('/play/create', isAuth,
-            (req, res, next) => this._playController.createPlayyConfirm(req, res, next));
+        this._router.post('/play/create', isAuth, (req, res, next) => this._playController.createPlayConfirm(req, res, next));
 
-        this._router.get('/play/edit/:id', isAuth,
-            (req, res, next) => this._playController.editPlay(req, res, next));
+        this._router.get('/play/details/:id', isAuth, (req, res, next) => this._playController.playDetails(req, res, next));
+       
+        this._router.get('/play/edit/:id', isAuth, (req, res, next) => this._playController.editPlay(req, res, next));
 
-        this._router.post('/play/edit/:id', isAuth,
-            (req, res, next) => this._playController.editPlayConfirm(req, res, next));
-
-        this._router.get('/play/delete/:id', isAuth,
-            (req, res, next) => this._playController.deletePlayConfirm(req, res, next));
-
-        this._router.get('/play/details/:id', isAuth,
-            (req, res, next) => this._playController.playDetails(req, res, next));
-
-        this._router.get('/play/like/:id', isAuth,
-            (req, res, next) => this._playController.likePlay(req, res, next));
+        this._router.post('/play/edit/:id', isAuth, (req, res, next) => this._playController.editPlayConfirm(req, res, next));
+        
+        this._router.get('/play/like/:id', isAuth, (req, res, next) => this._playController.likePlay(req, res, next));
+       
+        this._router.get('/play/delete/:id', isAuth, (req, res, next) => this._playController.deletePlayConfirm(req, res, next));
 
 
-        /* HOME CONTROLLER */
+        /* HOME --------------------------------------------------------------------------------------------------------------- */
 
-        this._router.get('/',
-            (req, res, next) => this._homeController.homePage(req, res, next));
+        this._router.get('/', (req, res, next) => this._homeController.homePage(req, res, next));
     }
 }
 

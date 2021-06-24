@@ -1,4 +1,4 @@
-const ValidationSerevice = require('../services/validationService');
+const ValidatorHandler = require('../validators/validatorHandler');
 
 
 class PlayController {
@@ -11,7 +11,7 @@ class PlayController {
     /* CREATE -------------------------------------------------------------------------------------------------------*/
 
     async createPlay(req, res, next) {
-        res.render('create-theater');
+        res.render('plays/create-theater');
     }
 
     async createPlayConfirm(req, res, next) {
@@ -26,12 +26,14 @@ class PlayController {
         }
         /* Validate input */
         const validationResult = this._joiValidator.createPlayValidation(req);
-        const error = ValidationSerevice.generateErrorJoi(validationResult);
+        const error = ValidatorHandler.generateErrorJoi(validationResult);
         if (error) {
-            return res.render('create-theater', {error, play: playData});
+            return res.render('plays/create-theater', {error, play: playData});
         }
         try {
-            await this._playService.createPlay(playData);
+            await this._playService.createPlay(
+                playData
+            );
             res.redirect('/');
         } catch (e) {
             next(e);
@@ -45,9 +47,12 @@ class PlayController {
         const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const play = await this._playService.findPlayById({playId, userId});
+            const play = await this._playService.findPlayById(
+                playId,
+                userId
+            );
             play.isCreator = Boolean(play.creator == userId);
-            res.render('theater-details', {play});
+            res.render('plays/theater-details', {play});
         } catch (e) {
             next(e);
         }
@@ -60,8 +65,11 @@ class PlayController {
         const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const play = await this._playService.findPlayById({playId, userId});
-            res.render('edit-theater', {play});
+            const play = await this._playService.findPlayById(
+                playId,
+                userId
+            );
+            res.render('plays/edit-theater', {play});
         } catch (e) {
             next(e);
         }
@@ -78,24 +86,29 @@ class PlayController {
         }
         /* Validate input */
         const validationResult = this._joiValidator.editPlayValidation(req);
-        const error = ValidationSerevice.generateErrorJoi(validationResult);
-        if (error) { 
-            res.render('edit-theater', {error, play: playData});
+        const error = ValidatorHandler.generateErrorJoi(validationResult);
+        if (error) {
+            res.render('plays/edit-theater', {error, play: playData});
             return;
         }
         /* Input data */
         const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const play = await this._playService.findPlayById({playId, userId});
+            const play = await this._playService.findPlayById(
+                playId,
+                userId
+            );
             if (play.creator != userId) {
-                return res.render('theater-details', {
+                return res.render('plays/theater-details', {
                     play,
                     error: "Only the creator can edit the play"
                 });
             }
-
-            await this._playService.editPlay({playId, playData});
+            await this._playService.editPlay(
+                playId,
+                playData
+            );
             res.redirect('/');
         } catch (e) {
             next(e);
@@ -107,7 +120,10 @@ class PlayController {
         const playId = req.params.id;
         const userId = req.user._id;
         try {
-            await this._playService.likePlay({playId, userId});
+            await this._playService.likePlay(
+                playId,
+                userId
+            );
             res.redirect(`/play/details/${playId}`)
         } catch (e) {
             next(e);
@@ -121,14 +137,16 @@ class PlayController {
         const playId = req.params.id;
         const userId = req.user._id;
         try {
-            const play = await this._playService.findPlayById({playId});
+            const play = await this._playService.findPlayById(playId);
             if (play.creator != userId) {
-                return res.render('theater-details', {
+                return res.render('plays/theater-details', {
                     play,
                     error: "Only the creator can delete the play"
                 });
             }
-            await this._playService.deletePlayConfirm(playId);
+            await this._playService.deletePlayConfirm(
+                playId
+            );
             res.redirect('/');
         } catch (e) {
             next(e);

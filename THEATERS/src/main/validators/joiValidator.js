@@ -151,6 +151,6 @@ class JoiValidatior {
             abortEarly: false, allowUnknown: true
         });
         return editPlaySchema.validate(req).error;
-    }
+    } 
 }
 module.exports = JoiValidatior;

@@ -15,7 +15,7 @@ class PlayService {
 
     /* FIND --------------------------------------------------------------------------------------------------- */
 
-    async findPlayById({playId, userId}) {
+    async findPlayById(playId, userId) {
         const play = await Play.findOne({_id: playId}).lean();
         const isLiked = play.usersLiked.some(id => id == userId);
         play.isLiked = isLiked;
@@ -56,17 +56,15 @@ class PlayService {
 
     /* EDIT ------------------------------------------------------------------------------------------------- */
 
-    async editPlay({playId, playData}) {
+    async editPlay(playId, playData) {
         return Play.updateOne({_id: playId}, playData).lean();
     }
 
-    async likePlay({playId, userId}) {
-
+    async likePlay(playId, userId) {
         /* Patch the user */
         const user = await User.findById(userId);
         user.likedPlays.push(playId);
         await user.save();
-
         /* Patch the play */
         const play = await Play.findById(playId);
         play.usersLiked.push(userId);

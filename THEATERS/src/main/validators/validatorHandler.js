@@ -1,4 +1,4 @@
-class ValidationSerevice {
+class ValidatorHandler {
 
     constructor() { }
 
@@ -24,4 +24,4 @@ class ValidationSerevice {
     }
 }
 
-module.exports = ValidationSerevice;
+module.exports = ValidatorHandler;
