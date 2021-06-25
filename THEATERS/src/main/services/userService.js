@@ -7,6 +7,13 @@ class UserService {
 
     constructor() { }
 
+    /* FIND ----------------------------------------------------------------------------------------------- */
+
+    async findUserByUsername(username) {
+        const user = await User.findOne({username}).lean();
+        return user
+    }
+
     /* REGISTER ------------------------------------------------------------------------------------------- */
 
     async register(username, password) {
@@ -29,13 +36,6 @@ class UserService {
         }
         const token = jwt.sign({_id: user._id, username: user.username}, config.SECRET);
         return token;
-    }
-
-    /* FIND ----------------------------------------------------------------------------------------------- */
-
-    async findUserByUsername(username) {
-        const user = await User.findOne({username}).lean();
-        return user
     }
 
     /* HASH ----------------------------------------------------------------------------------------------- */

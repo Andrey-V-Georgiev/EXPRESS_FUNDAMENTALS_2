@@ -8,10 +8,10 @@ class HomeController {
 
     async homePage(req, res, next) {
         const user = req.user;
-        const search = req.query.search; 
+        const sort = req.query.sort; 
         if (user) {
             try {
-                const plays = await this._playService.findAll(search); 
+                const plays = await this._playService.findAll(sort); 
                 res.render('home/user-home', {user, plays});
 
             } catch (e) {

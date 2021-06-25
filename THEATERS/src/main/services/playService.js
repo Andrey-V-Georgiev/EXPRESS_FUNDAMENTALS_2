@@ -6,26 +6,20 @@ class PlayService {
 
     constructor() { }
 
-    /* CREATE ------------------------------------------------------------------------------------------------- */
-
-    async createPlay(playData) {
-        const play = await Play.create(playData);
-        return play;
-    }
-
     /* FIND --------------------------------------------------------------------------------------------------- */
 
     async findPlayById(playId, userId) {
         const play = await Play.findOne({_id: playId}).lean();
         const isLiked = play.usersLiked.some(id => id == userId);
         play.isLiked = isLiked;
+        play.checked = play.isPublic ? 'checked' : '';
         return play;
     }
 
-    async findAll(search) {
+    async findAll(sort) {
         let plays;
-        if (search) {
-            plays = await Play.find({title: {$regex: search, $options: 'i'}}).sort({createdAt: 'desc'}).lean();
+        if (sort == 'likes') {
+            plays = await Play.find({}).sort({usersLiked: 'desc'}).lean();
         } else {
             plays = await Play.find({}).sort({createdAt: 'desc'}).lean();
         }
@@ -33,6 +27,7 @@ class PlayService {
         const locals = "en-US";
 
         return plays.map(c => {
+            c.likes = c.usersLiked.length;
             c.createdAt = c.createdAt.toLocaleDateString(locals, options);
             return c;
         });
@@ -54,17 +49,28 @@ class PlayService {
         });
     }
 
+    /* CREATE ------------------------------------------------------------------------------------------------- */
+
+    async createPlay(playData) {
+        const play = await Play.create(playData);
+        return play;
+    }
+
     /* EDIT ------------------------------------------------------------------------------------------------- */
 
-    async editPlay(playId, playData) {
-        return Play.updateOne({_id: playId}, playData).lean();
+    async editPlay(playId, data) {
+        return Play.updateOne({_id: playId}, data).lean();
     }
 
     async likePlay(playId, userId) {
+
+        console.log(playId, userId)
+
         /* Patch the user */
         const user = await User.findById(userId);
         user.likedPlays.push(playId);
         await user.save();
+
         /* Patch the play */
         const play = await Play.findById(playId);
         play.usersLiked.push(userId);

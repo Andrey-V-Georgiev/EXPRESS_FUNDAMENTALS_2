@@ -4,13 +4,13 @@ const {Schema} = mongoose;
 const playSchema = new Schema({
     title: {
         type: String,
-        minLength: [4, `Title should have minimum length of 4`],
+       // minLength: [4, `Title should have minimum length of 4`],
         required: [true, `Title is a required field`],
         unique: [true, `Title must be unique`]
     },
     description: {
         type: String,
-        minLength: [20, `Description should have minimum length of 20`],
+      //  minLength: [20, `Description should have minimum length of 20`],
         maxLength: [50, `Description should have a maximum length of 50`],
         required: [true],
     },

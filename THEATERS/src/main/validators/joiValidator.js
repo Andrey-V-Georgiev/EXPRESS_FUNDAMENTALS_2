@@ -9,7 +9,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    // .min(5)
+                    .min(3)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be empty field`,
@@ -17,7 +17,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    //   .min(5)
+                    .min(3)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({
@@ -44,7 +44,7 @@ class JoiValidatior {
             body: Joi.object().keys({
                 username: Joi.string()
                     .alphanum()
-                    //  .min(5)
+                    .min(3)
                     .required()
                     .messages({
                         'string.empty': `Username cannot be empty field`,
@@ -52,7 +52,7 @@ class JoiValidatior {
                         'any.required': `Username is a required field`
                     }),
                 password: Joi.string()
-                    // .min(5)
+                    .min(3)
                     .pattern(new RegExp('^[a-zA-Z0-9]+$'))
                     .required()
                     .messages({
@@ -91,18 +91,12 @@ class JoiValidatior {
                         'any.required': `Description is a required field`
                     }),
                 imageUrl: Joi.string()
-                    .pattern(new RegExp('^https.+'))
+                    .pattern(new RegExp('^https.*'))
                     .required()
                     .messages({
                         "string.pattern.base": "Image URL must starts with 'https'",
                         'string.empty': `Image URL cannot be empty field`,
                         'any.required': `Image URL is a required field`
-                    }),
-                duration: Joi.string()
-                    .required()
-                    .messages({
-                        'string.empty': `Duration cannot be empty field`,
-                        'any.required': `Duration is a required field`
                     })
             })
         }).options({
@@ -133,24 +127,18 @@ class JoiValidatior {
                         'any.required': `Description is a required field`
                     }),
                 imageUrl: Joi.string()
-                    .pattern(new RegExp('^https.+'))
+                    .pattern(new RegExp('^https.*'))
                     .required()
                     .messages({
                         "string.pattern.base": "Image URL must starts with 'https'",
                         'string.empty': `Image URL cannot be empty field`,
                         'any.required': `Image URL is a required field`
-                    }),
-                duration: Joi.string()
-                    .required()
-                    .messages({
-                        'string.empty': `Duration cannot be empty field`,
-                        'any.required': `Duration is a required field`
                     })
             })
         }).options({
             abortEarly: false, allowUnknown: true
         });
         return editPlaySchema.validate(req).error;
-    } 
+    }
 }
 module.exports = JoiValidatior;

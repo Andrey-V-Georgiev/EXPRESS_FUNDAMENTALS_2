@@ -8,38 +8,6 @@ class PlayController {
         this._playService = playService;
     }
 
-    /* CREATE -------------------------------------------------------------------------------------------------------*/
-
-    async createPlay(req, res, next) {
-        res.render('plays/create-theater');
-    }
-
-    async createPlayConfirm(req, res, next) {
-        /* Input data */
-        const playData = {
-            title: req.body.title.trim(),
-            description: req.body.description.trim(),
-            imageUrl: req.body.imageUrl.trim(),
-            duration: req.body.duration,
-            createdAt: new Date(),
-            creator: req.user._id
-        }
-        /* Validate input */
-        const validationResult = this._joiValidator.createPlayValidation(req);
-        const error = ValidatorHandler.generateErrorJoi(validationResult);
-        if (error) {
-            return res.render('plays/create-theater', {error, play: playData});
-        }
-        try {
-            await this._playService.createPlay(
-                playData
-            );
-            res.redirect('/');
-        } catch (e) {
-            next(e);
-        }
-    }
-
     /* FIND -------------------------------------------------------------------------------------------------------*/
 
     async playDetails(req, res, next) {
@@ -52,7 +20,39 @@ class PlayController {
                 userId
             );
             play.isCreator = Boolean(play.creator == userId);
-            res.render('plays/theater-details', {play});
+            res.render('theater-details', {play});
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /* CREATE -------------------------------------------------------------------------------------------------------*/
+
+    async createPlay(req, res, next) {
+        res.render('create-theater');
+    }
+
+    async createPlayConfirm(req, res, next) {
+        /* Input data */
+        const data = {
+            title: req.body.title.trim(),
+            description: req.body.description.trim(),
+            imageUrl: req.body.imageUrl.trim(),
+            isPublic: Boolean(req.body.isPublic == 'on'),
+            createdAt: new Date(),
+            creator: req.user._id
+        }
+        /* Validate input */
+        const validationResult = this._joiValidator.createPlayValidation(req);
+        const error = ValidatorHandler.generateErrorJoi(validationResult);
+        if (error) {
+            return res.render('create-theater', {error, play: data});
+        }
+        try {
+            await this._playService.createPlay(
+                data
+            );
+            res.redirect('/');
         } catch (e) {
             next(e);
         }
@@ -69,7 +69,7 @@ class PlayController {
                 playId,
                 userId
             );
-            res.render('plays/edit-theater', {play});
+            res.render('edit-theater', {play});
         } catch (e) {
             next(e);
         }
@@ -77,18 +77,17 @@ class PlayController {
 
     async editPlayConfirm(req, res, next) {
         /* Input data */
-        const playData = {
-            _id: req.params.id,
+        const data = {
             title: req.body.title.trim(),
             description: req.body.description.trim(),
             imageUrl: req.body.imageUrl.trim(),
-            duration: req.body.duration
-        }
+            isPublic: Boolean(req.body.isPublic == 'on'),
+        } 
         /* Validate input */
         const validationResult = this._joiValidator.editPlayValidation(req);
         const error = ValidatorHandler.generateErrorJoi(validationResult);
         if (error) {
-            res.render('plays/edit-theater', {error, play: playData});
+            res.render('edit-theater', {error, play: data});
             return;
         }
         /* Input data */
@@ -100,22 +99,22 @@ class PlayController {
                 userId
             );
             if (play.creator != userId) {
-                return res.render('plays/theater-details', {
+                return res.render('theater-details', {
                     play,
                     error: "Only the creator can edit the play"
                 });
             }
             await this._playService.editPlay(
                 playId,
-                playData
+                data
             );
-            res.redirect('/');
+            res.redirect(`/play/details/${playId}`)
         } catch (e) {
             next(e);
         }
     }
 
-    async likePlay(req, res, next) {
+    async likePlay(req, res, next) { 
         /* Input data */
         const playId = req.params.id;
         const userId = req.user._id;
@@ -139,7 +138,7 @@ class PlayController {
         try {
             const play = await this._playService.findPlayById(playId);
             if (play.creator != userId) {
-                return res.render('plays/theater-details', {
+                return res.render('theater-details', {
                     play,
                     error: "Only the creator can delete the play"
                 });
